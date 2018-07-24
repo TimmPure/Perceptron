@@ -7,19 +7,24 @@ public struct Coordinate
 {
     public float x;
     public float y;
+    public float sum;
+    public float estimate;
     public float answer;
-    public float guess;
+    public float error;
+
 
     public void Initialize()
     {
         x = Random.Range(0f, 10f);
         y = Random.Range(0f, 10f);
-        guess = 0f;
+        estimate = 0f;
+        sum = 0f;
+        error = 0f;
         answer = Perceptron.Solve(x, y);
     }
 
     public string Values()
     {
-        return "This Coord has X = " + x + ", y = " + y + ", answer = " + answer + ", guess = " +guess;
+        return "This Coord has X = " + x + ", y = " + y + ", sum = " + sum + ", answer = " + answer + ", estimate = " +estimate + ", error = " + error;
     }
 }

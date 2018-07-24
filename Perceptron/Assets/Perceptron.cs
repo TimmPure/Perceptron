@@ -10,7 +10,6 @@ public class Perceptron : MonoBehaviour
     public Coordinate[] dataSet;
 
     private int dataPoints = 100;
-    public float guess = 0f;
     private float error = 0f;
 
     void Start()
@@ -39,9 +38,17 @@ public class Perceptron : MonoBehaviour
     {
         for (int i = 0; i < dataSet.Length; i++)
         {
-            dataSet[i].guess = Sum(i);
+            //TODO: pass dataPoint as an argument
+            dataSet[i].sum = Sum(i);
+            dataSet[i].estimate = Activate(i);
+            dataSet[i].error = CalculateError(i);
+            Debug.Log(dataSet[i].Values());
         }
-        //guess = Activate(results);
+    }
+
+    private float CalculateError(int i)
+    {
+        return dataSet[i].answer - dataSet[i].estimate;
     }
 
     private float Sum(int i)
@@ -49,9 +56,9 @@ public class Perceptron : MonoBehaviour
           return dataSet[i].x * weights[0] + dataSet[i].y * weights[1] + bias * weights[2];
     }
 
-    private float Activate(float _result)
+    private float Activate(int i)
     {
-        if (_result >= 0f)
+        if (dataSet[i].sum >= 0f)
         {
             return 1f;
         } else
