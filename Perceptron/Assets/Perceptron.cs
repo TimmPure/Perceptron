@@ -10,15 +10,54 @@ public class Perceptron : MonoBehaviour
     public Coordinate[] dataSet;
 
     private int dataPoints = 100;
-    private float guess = 0f;
+    public float guess = 0f;
     private float error = 0f;
 
     void Start()
     {
         InitializeWeights();
         CreateDataset();
+        FeedForward();
+    }
 
-        //Process();
+    private void CreateDataset()
+    {
+        dataSet = new Coordinate[dataPoints];
+        for (int i = 0; i < dataSet.Length; i++)
+        {
+            dataSet[i] = new Coordinate();
+            dataSet[i].Initialize();
+        }
+    }
+
+    private void InitializeWeights()
+    {
+        weights = new float[3] { Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f) };
+    }
+
+    private void FeedForward()
+    {
+        for (int i = 0; i < dataSet.Length; i++)
+        {
+            dataSet[i].guess = Sum(i);
+        }
+        //guess = Activate(results);
+    }
+
+    private float Sum(int i)
+    {
+          return dataSet[i].x * weights[0] + dataSet[i].y * weights[1] + bias * weights[2];
+    }
+
+    private float Activate(float _result)
+    {
+        if (_result >= 0f)
+        {
+            return 1f;
+        } else
+        {
+            return -1f;
+        }
     }
 
     public static float Solve(float x, float y)
@@ -32,21 +71,6 @@ public class Perceptron : MonoBehaviour
         }
     }
 
-    private void InitializeWeights()
-    {
-        weights = new float[3] { Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f) };
-    }
-
-    private void CreateDataset()
-    {
-        dataSet = new Coordinate[dataPoints];
-        for (int i = 0; i < dataSet.Length; i++)
-        {
-            dataSet[i] = new Coordinate();
-            dataSet[i].Initialize();
-            Debug.Log(dataSet[i].Values());
-        }
-    }
 
 //    private void Process()
 //    {
@@ -74,10 +98,6 @@ public class Perceptron : MonoBehaviour
 //    }
 //}
 
-//private float Sum(int i)
-//{
-//    return inputs[i].x * weights.x + inputs[i].y * weights.y + bias * weights.z;
-//}
 
 //private void Activate()
 //{
