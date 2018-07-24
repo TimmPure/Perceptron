@@ -25,6 +25,6 @@ public struct Coordinate
 
     public string Values()
     {
-        return "This Coord has X = " + x + ", y = " + y + ", sum = " + sum + ", answer = " + answer + ", estimate = " +estimate + ", error = " + error;
+        return "This Coord has x = " + x + ", y = " + y + ", sum = " + sum + ", answer = " + answer + ", estimate = " + estimate + ", error = " + error;
     }
 }

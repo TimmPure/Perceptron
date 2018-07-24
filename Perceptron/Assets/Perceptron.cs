@@ -8,6 +8,7 @@ public class Perceptron : MonoBehaviour
     const float bias = 1f;
     const float learningRate = 0.1f;
     public Coordinate[] dataSet;
+    public Coordinate dataPoint;
 
     private int dataPoints = 100;
     private float error = 0f;
@@ -38,27 +39,27 @@ public class Perceptron : MonoBehaviour
     {
         for (int i = 0; i < dataSet.Length; i++)
         {
-            //TODO: pass dataPoint as an argument
-            dataSet[i].sum = Sum(i);
-            dataSet[i].estimate = Activate(i);
-            dataSet[i].error = CalculateError(i);
-            Debug.Log(dataSet[i].Values());
+            dataPoint = dataSet[i];
+            dataPoint.sum = Sum(dataPoint);
+            dataPoint.estimate = Activate(dataPoint);
+            dataPoint.error = CalculateError(dataPoint);
+            Debug.Log(dataPoint.Values());
         }
     }
 
-    private float CalculateError(int i)
+    private float CalculateError(Coordinate coord)
     {
-        return dataSet[i].answer - dataSet[i].estimate;
+        return coord.answer - coord.estimate;
     }
 
-    private float Sum(int i)
+    private float Sum(Coordinate coord)
     {
-          return dataSet[i].x * weights[0] + dataSet[i].y * weights[1] + bias * weights[2];
+          return coord.x * weights[0] + coord.y * weights[1] + bias * weights[2];
     }
 
-    private float Activate(int i)
+    private float Activate(Coordinate coord)
     {
-        if (dataSet[i].sum >= 0f)
+        if (coord.sum >= 0f)
         {
             return 1f;
         } else
