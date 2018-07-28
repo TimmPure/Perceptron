@@ -4,13 +4,15 @@ using UnityEngine;
 public class Perceptron : MonoBehaviour
 {
     const float bias = 1f;
-    const float learningRate = 0.1f;
+    const float learningRate = 0.01f;
     public float[] weights;
     public int dataPoints = 100;
     public Coordinate[] dataSet;
 
     private Coordinate dataPoint;
     public LineRenderer theLine;
+    public GameObject pointPrefab;
+    public Transform pointParent;
 
     void Start()
     {
@@ -44,6 +46,7 @@ public class Perceptron : MonoBehaviour
             dataPoint.sum = Sum(dataPoint);
             dataPoint.estimate = Activate(dataPoint);
             dataPoint.error = CalculateError(dataPoint);
+            SpawnDatapoint(dataPoint);
 
             if (dataPoint.error != 0f)
             {
@@ -51,7 +54,7 @@ public class Perceptron : MonoBehaviour
             }
             Debug.Log(dataPoint.Values() + ", Wx: " + weights[0] + ", Wy: " + weights[1]);
             theLine.SetPosition(1, new Vector3(10f, OutY(10f), 0));
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
         }
     }
 
@@ -81,6 +84,11 @@ public class Perceptron : MonoBehaviour
         weights[0] += coord.error * coord.x * learningRate;
         weights[1] += coord.error * coord.y * learningRate;
         weights[2] += coord.error * bias * learningRate;
+    }
+
+    private void SpawnDatapoint(Coordinate coord)
+    {
+        Instantiate(pointPrefab, new Vector3(coord.x, coord.y), Quaternion.identity, pointParent);
     }
 
     private float OutY(float x)
