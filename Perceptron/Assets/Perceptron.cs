@@ -10,7 +10,6 @@ public class Perceptron : MonoBehaviour
 
 
     private Coordinate dataPoint;
-    private float error = 0f;
 
     void Start()
     {
@@ -43,13 +42,13 @@ public class Perceptron : MonoBehaviour
             dataPoint.sum = Sum(dataPoint);
             dataPoint.estimate = Activate(dataPoint);
             dataPoint.error = CalculateError(dataPoint);
-            Debug.Log(dataPoint.Values());
-        }
-    }
 
-    private float CalculateError(Coordinate coord)
-    {
-        return coord.answer - coord.estimate;
+            if (dataPoint.error != 0f)
+            {
+            Backpropagate(dataPoint);
+            }
+            Debug.Log(dataPoint.Values() + ", Wx: " + weights[0] + ", Wy: " + weights[1]);
+        }
     }
 
     private float Sum(Coordinate coord)
@@ -68,6 +67,18 @@ public class Perceptron : MonoBehaviour
         }
     }
 
+    private float CalculateError(Coordinate coord)
+    {
+        return coord.answer - coord.estimate;
+    }
+
+    private void Backpropagate(Coordinate coord)
+    {
+        weights[0] += coord.error * coord.x * learningRate;
+        weights[1] += coord.error * coord.y * learningRate;
+        weights[2] += coord.error * bias * learningRate;
+    }
+
     public static float Solve(float x, float y)
     {
         if (x >= y)
@@ -78,15 +89,4 @@ public class Perceptron : MonoBehaviour
             return 1f;
         }
     }
-
-    //private void Train(int i)
-    //{
-    //    error = inputs[i].z - guess;
-    //    if (error != 0f)
-    //    {
-    //        weights.x += error * inputs[i].x * learningRate;
-    //        weights.y += error * inputs[i].y * learningRate;
-    //        weights.z += error * inputs[i].z * learningRate;
-    //        Debug.Log("Weights are " + weights);
-    //    }
 }
