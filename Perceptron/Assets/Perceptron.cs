@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class Perceptron : MonoBehaviour
 {
-    const float bias = 1f;
+    const float bias = 10f;
     private float learningRate = 0.05f;
     public float[] weights;
-    public int dataPoints = 100;
+    public int dataPoints = 500;
     public Coordinate[] dataSet;
     public float totalError = 0f;
+    private bool firstIteration = true;
 
     private Coordinate dataPoint;
     private float errorcount = 0f;
@@ -36,7 +37,7 @@ public class Perceptron : MonoBehaviour
 
     private void InitializeWeights()
     {
-        weights = new float[3] { Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f) };
+        weights = new float[3] { Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-10f, 10f) };
     }
 
     private IEnumerator FeedForward()
@@ -51,7 +52,11 @@ public class Perceptron : MonoBehaviour
             dataPoint.error = CalculateError(dataPoint);
             totalError += Mathf.Abs(dataPoint.error);
             Debug.Log(totalError);
-            SpawnDatapoint(dataPoint);
+            if (firstIteration)
+            {
+                SpawnDatapoint(dataPoint);
+            }
+
 
             if (dataPoint.error != 0f)
             {
@@ -61,10 +66,11 @@ public class Perceptron : MonoBehaviour
             SetLineCoordinates();
             yield return new WaitForSeconds(0.01f);
         }
-
-        if(totalError/dataSet.Length > .05f)
+        firstIteration = false;
+        totalError = totalError / dataSet.Length;
+        if ( totalError > .05f)
         {
-            //learningRate = learningRate / 2;
+            learningRate = learningRate *.9f;
             Debug.Log("Next iteration");
             StartCoroutine(FeedForward());
         }
@@ -105,7 +111,7 @@ public class Perceptron : MonoBehaviour
 
     private void SetLineCoordinates()
     {
-        theLine.SetPosition(0, new Vector3(0f, OutY(0f)));
+        theLine.SetPosition(0, new Vector3(-10f, OutY(-10f)));
         theLine.SetPosition(1, new Vector3(10f, OutY(10f)));
     }
 

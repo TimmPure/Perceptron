@@ -15,8 +15,8 @@ public struct Coordinate
 
     public void Initialize()
     {
-        x = Random.Range(0f, 10f);
-        y = Random.Range(0f, 10f);
+        x = Random.Range(-10f, 10f);
+        y = Random.Range(-10f, 10f);
         estimate = 0f;
         sum = 0f;
         error = 0f;
