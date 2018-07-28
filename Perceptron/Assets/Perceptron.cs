@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Perceptron : MonoBehaviour
 {
@@ -8,14 +9,15 @@ public class Perceptron : MonoBehaviour
     public int dataPoints = 100;
     public Coordinate[] dataSet;
 
-
     private Coordinate dataPoint;
+    public LineRenderer theLine;
 
     void Start()
     {
+        //theLine = gameObject.GetComponent<LineRenderer>();
         InitializeWeights();
         CreateDataset();
-        FeedForward();
+        StartCoroutine(FeedForward());
     }
 
     private void CreateDataset()
@@ -34,7 +36,7 @@ public class Perceptron : MonoBehaviour
         weights = new float[3] { Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-1f, 1f) };
     }
 
-    private void FeedForward()
+    private IEnumerator FeedForward()
     {
         for (int i = 0; i < dataSet.Length; i++)
         {
@@ -45,9 +47,11 @@ public class Perceptron : MonoBehaviour
 
             if (dataPoint.error != 0f)
             {
-            Backpropagate(dataPoint);
+                Backpropagate(dataPoint);
             }
             Debug.Log(dataPoint.Values() + ", Wx: " + weights[0] + ", Wy: " + weights[1]);
+            theLine.SetPosition(1, new Vector3(10f, OutY(10f), 0));
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
@@ -79,6 +83,11 @@ public class Perceptron : MonoBehaviour
         weights[2] += coord.error * bias * learningRate;
     }
 
+    private float OutY(float x)
+    {
+        return -(weights[2] / weights[1]) * bias - (weights[0] / weights[1]) * x;
+    }
+
     public static float Solve(float x, float y)
     {
         if (x >= y)
@@ -88,5 +97,10 @@ public class Perceptron : MonoBehaviour
         {
             return 1f;
         }
+    }
+
+    IEnumerator Wait()
+    {
+        yield return new WaitForSeconds(1f);
     }
 }
