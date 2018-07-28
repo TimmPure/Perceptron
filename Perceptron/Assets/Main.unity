@@ -444,6 +444,7 @@ MonoBehaviour:
   dataPoints: 100
   totalError: 0
   theLine: {fileID: 763678197}
+  solutionLine: {fileID: 640661975}
   pointPrefab: {fileID: 1203497128726474, guid: ae8cbf7b3931b4b4dafcc607c0ff8f8e,
     type: 2}
   pointParent: {fileID: 1955010786}

@@ -11,6 +11,7 @@ public struct Coordinate
     public float estimate;
     public float answer;
     public float error;
+    private Perceptron perceptron;
 
 
     public void Initialize()
@@ -20,7 +21,8 @@ public struct Coordinate
         estimate = 0f;
         sum = 0f;
         error = 0f;
-        answer = Perceptron.Solve(x, y);
+        perceptron = GameObject.FindObjectOfType<Perceptron>();
+        answer = perceptron.Solve(x, y);
     }
 
     public string Values()

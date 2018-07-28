@@ -10,17 +10,21 @@ public class Perceptron : MonoBehaviour
     public Coordinate[] dataSet;
     public float totalError = 0f;
     private bool firstIteration = true;
+    public float slope;
+    public float intercept;
 
     private Coordinate dataPoint;
     private float errorcount = 0f;
     public LineRenderer theLine;
+    public LineRenderer solutionLine;
     public GameObject pointPrefab;
     public Transform pointParent;
 
     void Start()
     {
-        InitializeWeights();
+        InitializeValues();
         CreateDataset();
+        SetSolutionCoordinates();
         StartCoroutine(FeedForward());
     }
 
@@ -35,9 +39,11 @@ public class Perceptron : MonoBehaviour
         }
     }
 
-    private void InitializeWeights()
+    private void InitializeValues()
     {
         weights = new float[3] { Random.Range(-1f, 1f), Random.Range(-1f, 1f), Random.Range(-10f, 10f) };
+        slope = Random.Range(-3f, 3f);
+        intercept = Random.Range(-5f, 5);
     }
 
     private IEnumerator FeedForward()
@@ -115,14 +121,26 @@ public class Perceptron : MonoBehaviour
         theLine.SetPosition(1, new Vector3(10f, OutY(10f)));
     }
 
+
+    private void SetSolutionCoordinates()
+    {
+        solutionLine.SetPosition(0, new Vector3(-10f, SolveY(-10f)));
+        solutionLine.SetPosition(1, new Vector3(10f, SolveY(10f)));
+    }
+
     private float OutY(float x)
     {
         return -(weights[2] / weights[1]) * bias - (weights[0] / weights[1]) * x;
     }
 
-    public static float Solve(float x, float y)
+    private float SolveY(float x)
     {
-        if (x >= y)
+        return slope * x + intercept;
+    }
+
+    public float Solve(float x, float y)
+    {
+        if (y >= (slope * x + intercept))
         {
             return -1f;
         } else
