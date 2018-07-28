@@ -53,7 +53,7 @@ public class Perceptron : MonoBehaviour
                 Backpropagate(dataPoint);
             }
             Debug.Log(dataPoint.Values() + ", Wx: " + weights[0] + ", Wy: " + weights[1]);
-            theLine.SetPosition(1, new Vector3(10f, OutY(10f), 0));
+            SetLineCoordinates();
             yield return new WaitForSeconds(0.1f);
         }
     }
@@ -89,6 +89,12 @@ public class Perceptron : MonoBehaviour
     private void SpawnDatapoint(Coordinate coord)
     {
         Instantiate(pointPrefab, new Vector3(coord.x, coord.y), Quaternion.identity, pointParent);
+    }
+
+    private void SetLineCoordinates()
+    {
+        theLine.SetPosition(0, new Vector3(0f, OutY(0f)));
+        theLine.SetPosition(1, new Vector3(10f, OutY(10f)));
     }
 
     private float OutY(float x)
