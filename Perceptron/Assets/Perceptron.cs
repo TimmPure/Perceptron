@@ -4,19 +4,20 @@ using UnityEngine;
 public class Perceptron : MonoBehaviour
 {
     const float bias = 1f;
-    const float learningRate = 0.01f;
+    private float learningRate = 0.05f;
     public float[] weights;
     public int dataPoints = 100;
     public Coordinate[] dataSet;
+    public float totalError = 0f;
 
     private Coordinate dataPoint;
+    private float errorcount = 0f;
     public LineRenderer theLine;
     public GameObject pointPrefab;
     public Transform pointParent;
 
     void Start()
     {
-        //theLine = gameObject.GetComponent<LineRenderer>();
         InitializeWeights();
         CreateDataset();
         StartCoroutine(FeedForward());
@@ -40,21 +41,32 @@ public class Perceptron : MonoBehaviour
 
     private IEnumerator FeedForward()
     {
+        totalError = 0f;
+
         for (int i = 0; i < dataSet.Length; i++)
         {
             dataPoint = dataSet[i];
             dataPoint.sum = Sum(dataPoint);
             dataPoint.estimate = Activate(dataPoint);
             dataPoint.error = CalculateError(dataPoint);
+            totalError += Mathf.Abs(dataPoint.error);
+            Debug.Log(totalError);
             SpawnDatapoint(dataPoint);
 
             if (dataPoint.error != 0f)
             {
                 Backpropagate(dataPoint);
             }
-            Debug.Log(dataPoint.Values() + ", Wx: " + weights[0] + ", Wy: " + weights[1]);
+            Debug.Log(dataPoint.Values() + ", Wx: " + weights[0] + ", Wy: " + weights[1] + ", Wb: " + weights[2]);
             SetLineCoordinates();
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        if(totalError/dataSet.Length > .05f)
+        {
+            //learningRate = learningRate / 2;
+            Debug.Log("Next iteration");
+            StartCoroutine(FeedForward());
         }
     }
 
